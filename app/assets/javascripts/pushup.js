@@ -17,7 +17,10 @@ if(!console || !console.log){
 		'fps': 50,
 		'goalRow': null,
 		'player': null,
-		'keystate': 'up',
+		'keystate': {
+				left: false,
+				right: false
+			},
 		'interval_id': null
 	};
 
@@ -53,10 +56,10 @@ if(!console || !console.log){
 			this.fillStyle = params.fillStyle;
 		},
 		update: function(){
-			if(global.keystate === 'left'){
+			if(global.keystate.left){
 				this.x = Math.max(this.x-5,this.radius);
 			} 
-			if(global.keystate === 'right'){
+			if(global.keystate.right){
 				this.x = Math.min(this.x+5, global.width-this.radius);
 			}
 			if(global.playerFallThisTick){
@@ -341,22 +344,37 @@ if(!console || !console.log){
 
 		//input events
 		$(document).keydown(function(event){
+			console.log("down", global.keystate.left);
 			switch(event.keyCode){
 				case 37: 
 				case 65:
 				case 100:
-					global.keystate = 'left';
+					global.keystate.left = true; //replace with time
 					break;
 				case 39:
 				case 68:
 				case 102:
-					global.keystate = 'right';
+					global.keystate.right = true; //replace with time
 					break;
 				default:
 					break;
 			}
 		}).keyup(function(event){
-			global.keystate = 'up';
+		console.log("up", event);
+		switch(event.keyCode){
+				case 37: 
+				case 65:
+				case 100:
+					global.keystate.left = false; //replace with delete
+					break;
+				case 39:
+				case 68:
+				case 102:
+					global.keystate.right = false; //replace with delete
+					break;
+				default:
+					break;
+			}
 		});
 	});
 
