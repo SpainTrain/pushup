@@ -344,7 +344,6 @@ if(!console || !console.log){
 
 		//input events
 		$(document).keydown(function(event){
-			console.log("down", global.keystate.left);
 			switch(event.keyCode){
 				case 37: 
 				case 65:
@@ -360,7 +359,6 @@ if(!console || !console.log){
 					break;
 			}
 		}).keyup(function(event){
-		console.log("up", event);
 		switch(event.keyCode){
 				case 37: 
 				case 65:
