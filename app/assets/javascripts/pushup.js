@@ -14,10 +14,11 @@ if(!console || !console.log){
 		'height': null,
 		'context': null,
 		'toDraw': [],
-		'fps': 30,
+		'fps': 50,
 		'goalRow': null,
 		'player': null,
-		'keystate': 'up'
+		'keystate': 'up',
+		'interval_id': null
 	};
 
  
@@ -51,7 +52,7 @@ if(!console || !console.log){
 			this.radius = params.radius;
 			this.fillStyle = params.fillStyle;
 		},
-		animate: function(){
+		update: function(){
 			if(global.keystate === 'left'){
 				this.x = Math.max(this.x-5,this.radius);
 			} 
@@ -142,7 +143,7 @@ if(!console || !console.log){
 			this.defaultFill = this.blocks[0].block.fillStyle;
 			this.randomize();
 		},
-		animate: function(){
+		update: function(){
 			var y = this.blocks[0].block.y + this.blocks[0].block.vy;
 			var height = this.blocks[0].block.height;
 
@@ -272,17 +273,41 @@ if(!console || !console.log){
 
 		//ctx.globalCompositeOperation = 'destination-over';
 		ctx.clearRect(0,0,global.canvas.width(),global.canvas.height());
-		global.playerFallThisTick = true;
 
 		list.each(function(obj){ 
-			if(obj.animate){
-				obj.animate();
-			}
-				
 			if(obj.draw){ 
 				obj.draw(ctx); 
 			}
 		});
+	};
+
+	var update = function(){
+		var list = global.toDraw;
+		global.playerFallThisTick = true;
+
+		list.each(function(obj){
+			if(obj.update){
+				obj.update();
+			}
+		});
+	};
+
+	var game_run = function(){
+		var loops = 0, 
+			skip_ticks = 1000 / global.fps,
+			max_frame_skip = 10,
+			next_game_tick = (new Date).getTime();
+
+		global.interval_id = setInterval(function(){
+			loops = 0;
+
+			while ((new Date).getTime() > next_game_tick && loops < max_frame_skip){
+				update();
+				next_game_tick += skip_ticks;
+				loops++;
+			}
+				draw();
+		}, 1000/global.fps);
 	};
 
 	$("document").ready(function(event){
@@ -290,7 +315,7 @@ if(!console || !console.log){
 
 		initObjects();
 
-		setInterval(draw,1000/global.fps);
+		game_run();
 
 		//input events
 		$(document).keydown(function(event){
