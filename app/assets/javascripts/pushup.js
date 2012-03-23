@@ -292,13 +292,13 @@ if(!console || !console.log){
 		});
 	};
 
-	var game_run = function(){
+	var game_run = (function(){
 		var loops = 0, 
 			skip_ticks = 1000 / global.fps,
 			max_frame_skip = 10,
 			next_game_tick = (new Date).getTime();
 
-		global.interval_id = setInterval(function(){
+		return function(){
 			loops = 0;
 
 			while ((new Date).getTime() > next_game_tick && loops < max_frame_skip){
@@ -306,16 +306,38 @@ if(!console || !console.log){
 				next_game_tick += skip_ticks;
 				loops++;
 			}
-				draw();
-		}, 1000/global.fps);
-	};
+				if(loops){
+					draw()
+				};
+		};
+	})();
 
 	$("document").ready(function(event){
 		initCanvas();
 
 		initObjects();
 
-		game_run();
+		(function() {
+			var onEachFrame;
+			if (window.webkitRequestAnimationFrame) {
+				onEachFrame = function(cb) {
+					var _cb = function() { cb(); webkitRequestAnimationFrame(_cb); }
+					_cb();
+				};
+			} else if (window.mozRequestAnimationFrame) {
+				onEachFrame = function(cb) {
+					var _cb = function() { cb(); mozRequestAnimationFrame(_cb); }
+					_cb();
+				};
+			} else {
+				onEachFrame = function(cb) {
+					setInterval(cb, 1000 / global.fps);
+				}
+			}
+			window.onEachFrame = onEachFrame;
+		})();
+
+		window.onEachFrame(game_run);
 
 		//input events
 		$(document).keydown(function(event){
