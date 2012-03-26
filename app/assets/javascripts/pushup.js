@@ -169,16 +169,16 @@ if(!console || !console.log){
 			var playerLeft = global.player.x - global.player.radius;
 			var playerRight = global.player.x + global.player.radius;
 			if(playerBottom>y && playerBottom <y+height){
+				global.playerFallThisTick = false;
 				this.blocks.each(function(item){
-					if(global.player.x >= item.block.x && global.player.x < item.block.x+item.block.width){
-						if(!item.active){
-							global.playerFallThisTick = true;
-						} else {
-							global.player.y = y-global.player.radius;
-							global.playerFallThisTick = false;
-						}		
+					//is the ball over an empty block?
+					if(!item.active && playerLeft >= item.block.x && playerRight < item.block.x+item.block.width){
+						global.playerFallThisTick = true;
 					}
 				});
+				if(!global.playerFallThisTick){
+					global.player.y = y-global.player.radius;
+				}
 			}
 		},
 		randomize: function(){
