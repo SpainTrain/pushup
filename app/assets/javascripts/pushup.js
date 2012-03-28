@@ -193,8 +193,10 @@ if(!console || !console.log){
 				else if(this.blocks[leftBlkIndex].active || this.blocks[rightBlkIndex].active){
 					var activeBlk = this.blocks[leftBlkIndex].active ? this.blocks[leftBlkIndex].block : this.blocks[rightBlkIndex].block;
 					var xdiff = this.blocks[leftBlkIndex].active ? global.player.x - activeBlk.right() : activeBlk.left() - global.player.x;
-	
-					if(xdiff <= 0 || global.player.y < activeBlk.bottom() - util.findHypotenuse(global.player.radius, xdiff)){
+					var ydiff = global.player.x - activeBlk.bottom();
+					var dist = util.findHypotenuse(xdiff, ydiff); //distance from player center to block edge
+
+					if(xdiff <= 0 || (ydiff>0 && dist <= global.player.radius) ){
 						global.player.vy = vy;
 					} 
 				}
