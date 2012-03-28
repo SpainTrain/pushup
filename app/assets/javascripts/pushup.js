@@ -188,7 +188,8 @@ if(!console || !console.log){
 
 				//is the ball over filled block(s)?
 				if(this.blocks[leftBlkIndex].active && this.blocks[rightBlkIndex].active){
-					global.player.vy = vy;;
+					global.player.vy = vy;
+					global.player.y = y+height+global.player.radius-vy;//set player perfectly against block in case it went too far
 				}
 				//is the ball over one filled and one unfilled block
 				else if(this.blocks[leftBlkIndex].active || this.blocks[rightBlkIndex].active){
