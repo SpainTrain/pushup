@@ -22,7 +22,8 @@ if(!console || !console.log){
 		'fps': 50,
 		'goalRow': null,
 		'player': null,
-		'player_nominal_vy': -5,
+		'player_nominal_vy': -1,
+		'block_vy': 1,
 		'inputstate': {
 				left: false,
 				right: false
@@ -193,7 +194,7 @@ if(!console || !console.log){
 				else if(this.blocks[leftBlkIndex].active || this.blocks[rightBlkIndex].active){
 					var activeBlk = this.blocks[leftBlkIndex].active ? this.blocks[leftBlkIndex].block : this.blocks[rightBlkIndex].block;
 					var xdiff = this.blocks[leftBlkIndex].active ? global.player.x - activeBlk.right() : activeBlk.left() - global.player.x;
-					var ydiff = global.player.x - activeBlk.bottom();
+					var ydiff = global.player.y - activeBlk.bottom();
 					var dist = util.findHypotenuse(xdiff, ydiff); //distance from player center to block edge
 
 					if(xdiff <= 0 || (ydiff>0 && dist <= global.player.radius) ){
@@ -281,7 +282,7 @@ if(!console || !console.log){
 			list.push(new movingblockrow({
 				count: count, 
 				y: i * Math.floor(global.height/totRows),
-				vy: 2,
+				vy: global.block_vy,
 				p: 0.25
 			}));
 		}
