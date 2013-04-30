@@ -1,5 +1,0 @@
-==Push Up
-
-Push up is an arcade game with no relation to "Fall Down"
-
-View live at: http://ec2-184-73-117-201.compute-1.amazonaws.com/pushup
