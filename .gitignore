@@ -16,3 +16,6 @@
 
 #specific files
 /README.rdoc.default
+
+node_modules
+_dev_public
